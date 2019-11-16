@@ -9,11 +9,14 @@ logging.basicConfig(
     level=logging.INFO,
     datefmt='%Y-%m-%d %H:%M:%S')
 
-logging.info("""gas.py - Print readings from the MICS6814 Gas sensor.
+logging.info("""adc.py - Print readings from the MICS6814 Gas sensor.
 
 Press Ctrl+C to exit!
 
 """)
+
+gas.enable_adc()
+gas.set_adc_gain(4.096)
 
 try:
     while True:

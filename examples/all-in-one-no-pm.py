@@ -13,7 +13,6 @@ except ImportError:
     import ltr559
 
 from bme280 import BME280
-from pms5003 import PMS5003, ReadTimeoutError as pmsReadTimeoutError
 from enviroplus import gas
 from subprocess import PIPE, Popen
 from PIL import Image
@@ -27,16 +26,11 @@ logging.basicConfig(
     datefmt='%Y-%m-%d %H:%M:%S')
 
 logging.info("""all-in-one.py - Displays readings from all of Enviro plus' sensors
-
 Press Ctrl+C to exit!
-
 """)
 
 # BME280 temperature/pressure/humidity sensor
 bme280 = BME280()
-
-# PMS5003 particulate sensor
-pms5003 = PMS5003()
 
 # Create ST7735 LCD display class
 st7735 = ST7735.ST7735(
@@ -107,7 +101,7 @@ factor = 0.8
 cpu_temps = [get_cpu_temperature()] * 5
 
 delay = 0.5  # Debounce the proximity tap
-mode = 0     # The starting mode
+mode = 0  # The starting mode
 last_page = 0
 light = 1
 
@@ -118,10 +112,7 @@ variables = ["temperature",
              "light",
              "oxidised",
              "reduced",
-             "nh3",
-             "pm1",
-             "pm25",
-             "pm10"]
+             "nh3"]
 
 values = {}
 
@@ -192,39 +183,6 @@ try:
             data = gas.read_all()
             data = data.nh3 / 1000
             display_text(variables[mode], data, unit)
-
-        if mode == 7:
-            # variable = "pm1"
-            unit = "ug/m3"
-            try:
-                data = pms5003.read()
-            except pmsReadTimeoutError:
-                logging.warn("Failed to read PMS5003")
-            else:
-                data = float(data.pm_ug_per_m3(1.0))
-                display_text(variables[mode], data, unit)
-
-        if mode == 8:
-            # variable = "pm25"
-            unit = "ug/m3"
-            try:
-                data = pms5003.read()
-            except pmsReadTimeoutError:
-                logging.warn("Failed to read PMS5003")
-            else:
-                data = float(data.pm_ug_per_m3(2.5))
-                display_text(variables[mode], data, unit)
-
-        if mode == 9:
-            # variable = "pm10"
-            unit = "ug/m3"
-            try:
-                data = pms5003.read()
-            except pmsReadTimeoutError:
-                logging.warn("Failed to read PMS5003")
-            else:
-                data = float(data.pm_ug_per_m3(10))
-                display_text(variables[mode], data, unit)
 
 # Exit cleanly
 except KeyboardInterrupt:

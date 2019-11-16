@@ -22,33 +22,15 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 """
 
-try:
-    from setuptools import setup
-except ImportError:
-    from distutils.core import setup
+from setuptools import setup, __version__
+from pkg_resources import parse_version
 
-classifiers = ['Development Status :: 4 - Beta',
-               'Operating System :: POSIX :: Linux',
-               'License :: OSI Approved :: MIT License',
-               'Intended Audience :: Developers',
-               'Programming Language :: Python :: 2.6',
-               'Programming Language :: Python :: 2.7',
-               'Programming Language :: Python :: 3',
-               'Topic :: Software Development',
-               'Topic :: System :: Hardware']
+minimum_version = parse_version('30.4.0')
+
+if parse_version(__version__) < minimum_version:
+    raise RuntimeError("Package setuptools must be at least version {}".format(minimum_version))
 
 setup(
-    name='enviroplus',
-    version='0.0.1',
-    author='Philip Howard',
-    author_email='phil@pimoroni.com',
-    description="""Enviro pHAT Plus environmental monitoring add-on for Raspberry Pi""",
-    long_description=open('README.rst').read() + '\n' + open('CHANGELOG.txt').read(),
-    license='MIT',
-    keywords='Raspberry Pi',
-    url='http://www.pimoroni.com',
-    project_urls={'GitHub': 'https://www.github.com/pimoroni/enviroplus-python'},
-    classifiers=classifiers,
     packages=['enviroplus'],
-    install_requires=['pimoroni-bme280', 'pms5003', 'ltr559', 'st7735', 'ads1015']
+    install_requires=['setuptools>={}'.format(minimum_version), 'pimoroni-bme280', 'pms5003', 'ltr559', 'st7735', 'ads1015']
 )
